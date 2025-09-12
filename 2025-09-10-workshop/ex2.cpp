@@ -30,6 +30,14 @@ int sumdigits(long num)
     //     suma += num % 10; // Get the last digit and add it to the sum
     //     num /= 10;        // Remove the last digit from the number
     // }    
+    
+    // num = 123 
+    // 123%10 -> 3
+    // num = 123/10 = 12
+    // 12%10 -> 2
+    // num = 12/10 -> 1
+    // 1%10 -> 1
+    // num = 1/10 -> 0
 
     return suma;
 }

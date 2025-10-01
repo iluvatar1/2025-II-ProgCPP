@@ -3,17 +3,26 @@
 
 #include <functional>
 #include <cmath>
-
+#include <print>
 
 using fptr = std::function<double(double)>; // f(x)
 
 double f(double x);
 double trapecio(double a, double b, int nintervals, fptr fun);
+double simpson(double a, double b, int nintervals, fptr fun);
 
 /* ejercicio:
-- Implementar la funcion main para imprimir 
-la integral entre 0 y 1, con 10 intervalos
+implementar simpson
 */
+
+int main(void)
+{
+    std::println("{:25.16e}", trapecio(0.0, 1.0, 10, f) );
+    std::println("{:25.16e}", simpson(0.0, 1.0, 10, f) );
+
+    return 0;
+}
+
 
 double f(double x)
 {
@@ -32,4 +41,9 @@ double trapecio(double a, double b, int nintervals, fptr fun)
     suma = suma + fun(a)/2 + fun(b)/2;
 
     return deltax*suma;
+}
+
+double simpson(double a, double b, int nintervals, fptr fun)
+{
+    
 }

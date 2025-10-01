@@ -4,6 +4,7 @@
 #include <functional>
 #include <cmath>
 #include <print>
+#include <fstream>
 
 using fptr = std::function<double(double)>; // f(x)
 using algptr = std::function<double(double, double, int, fptr)>; // representa a forward_diff o central_diff
@@ -17,12 +18,21 @@ double richardson_int(double a, double b, int nsteps,
 
 int main(void)
 {
-    std::println("{:25.16e}", trapecio(0.0, 1.0, 10, f) );
-    std::println("{:25.16e}", simpson(0.0, 1.0, 10, f) );
-    std::println("{:25.16e}", richardson_int(0.0, 1.0, 10, 2, trapecio, f) );
-    std::println("{:25.16e}", richardson_int(0.0, 1.0, 10, 4, simpson, f) );
-    std::println("{:25.16e}", std::pow(std::sin(0.5), 2) );
+    double exact = std::pow(std::sin(0.5), 2);
+    double a = 0.0;
+    double b = 1.0;
 
+    std::ofstream fout("data.txt");
+
+    for (int n = 5; n <= 10000000; n *= 2) {
+        double et = std::fabs(1.0 - trapecio(a, b, n, f)/exact );
+        double es = std::fabs(1.0 - simpson(a, b, n, f)/exact );
+        double etr = std::fabs(1.0 - richardson_int(a, b, n, 2, trapecio, f)/exact );
+        double ets = std::fabs(1.0 - richardson_int(a, b, n, 4, simpson, f)/exact );
+        std::println(fout, "{:10} {:25.16e} {:25.16e} {:25.16e} {:25.16e}", 
+                    n, et, es, etr, ets);
+    }
+    fout.close();
 
     return 0;
 }

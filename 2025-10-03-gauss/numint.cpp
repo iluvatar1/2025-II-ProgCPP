@@ -30,8 +30,8 @@ int main(void)
     double etr = std::fabs(1.0 - richardson_int(a, b, n, 2, trapecio, f)/exact );
     double ets = std::fabs(1.0 - richardson_int(a, b, n, 4, simpson, f)/exact );
     double etg2 = std::fabs(1.0 - gauss2(a, b, f)/exact );
-    std::println(fout, "{:10} {:25.16e} {:25.16e} {:25.16e} {:25.16e}", 
-                n, et, es, etr, ets);
+    std::println(fout, "{:10} {:25.16e} {:25.16e} {:25.16e} {:25.16e} {:25.16e}", 
+                n, et, es, etr, ets, etg2);
     fout.close();
 
     return 0;
@@ -93,5 +93,19 @@ double richardson_int(double a, double b, int nsteps,
 
 double gauss2(double a, double b, fptr fun)
 {
-    return 1;
+    // puntos de gauss
+    double x0 = -1.0/std::sqrt(3);
+    double x1 = +1.0/std::sqrt(3);
+    // pesos 
+    double w0 = 1.0;
+    double w1 = 1.0;
+
+    // aux
+    double aux1 = (b-a)/2;
+    double aux2 = (b+a)/2;
+
+    // suma
+    double suma = w0*fun(aux1*x0 + aux2) + w1*fun(aux1*x1 + aux2);
+
+    return aux1*suma;
 }

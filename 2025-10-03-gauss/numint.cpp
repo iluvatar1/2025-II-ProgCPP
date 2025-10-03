@@ -15,6 +15,7 @@ double simpson(double a, double b, int nintervals, fptr fun);
 double richardson_int(double a, double b, int nsteps, 
                       int order, algptr alg, fptr fun);
 double gauss2(double a, double b, fptr fun);
+double gauss5(double a, double b, fptr fun);
 
 int main(void)
 {
@@ -24,14 +25,15 @@ int main(void)
 
     std::ofstream fout("data.txt");
 
-    int n = 2;
+    int n = 5;
     double et = std::fabs(1.0 - trapecio(a, b, n, f)/exact );
     double es = std::fabs(1.0 - simpson(a, b, n, f)/exact );
     double etr = std::fabs(1.0 - richardson_int(a, b, n, 2, trapecio, f)/exact );
     double ets = std::fabs(1.0 - richardson_int(a, b, n, 4, simpson, f)/exact );
     double etg2 = std::fabs(1.0 - gauss2(a, b, f)/exact );
-    std::println(fout, "{:10} {:25.16e} {:25.16e} {:25.16e} {:25.16e} {:25.16e}", 
-                n, et, es, etr, ets, etg2);
+    double etg5 = std::fabs(1.0 - gauss5(a, b, f)/exact );
+    std::println(fout, "{:10} {:25.16e} {:25.16e} {:25.16e} {:25.16e} {:25.16e} {:25.16e}", 
+                n, et, es, etr, ets, etg2, etg5);
     fout.close();
 
     return 0;
@@ -106,6 +108,33 @@ double gauss2(double a, double b, fptr fun)
 
     // suma
     double suma = w0*fun(aux1*x0 + aux2) + w1*fun(aux1*x1 + aux2);
+
+    return aux1*suma;
+}
+
+double gauss5(double a, double b, fptr fun)
+{
+    // puntos de gauss
+    double x0 = 0.0000000000000000;
+    double x1 = -0.5384693101056831;
+    double x2 = 0.5384693101056831;
+    double x3 = -0.9061798459386640;
+    double x4 = 0.9061798459386640;
+    // pesos 
+    double w0 = 0.5688888888888889;
+    double w1 = 0.4786286704993665;
+    double w2 = 0.4786286704993665;
+    double w3 = 0.2369268850561891;
+    double w4 = 0.2369268850561891;
+
+    // aux
+    double aux1 = (b-a)/2;
+    double aux2 = (b+a)/2;
+
+    // suma
+    double suma = w0*fun(aux1*x0 + aux2) + w1*fun(aux1*x1 + aux2) + 
+                    w2*fun(aux1*x2 + aux2) + w3*fun(aux1*x3 + aux2) + 
+                    w4*fun(aux1*x4 + aux2);
 
     return aux1*suma;
 }

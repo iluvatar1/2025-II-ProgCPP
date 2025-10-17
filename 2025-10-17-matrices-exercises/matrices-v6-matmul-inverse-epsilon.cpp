@@ -19,6 +19,7 @@ void matmul(const std::vector<double> & A, int mA, int nA,
 bool check_inverse(const std::vector<double> & A, int mA, int nA,
                     const std::vector<double> & B, int mB, int nB,
                     double eps);
+void test_inverse(int m, int n);
 
 
 int main(int argc, char **argv)
@@ -26,21 +27,7 @@ int main(int argc, char **argv)
   const int M = std::stoi(argv[1]);
   const int N = std::stoi(argv[2]);
 
-  std::vector<double> A2d(M*N, 0.0); // original matrix
-  std::vector<double> B2d(N*M, 0.0); // transpose
-  std::vector<double> C2d; // result
-
-  // setup original matrix
-  fill_matrix(A2d, M, N);
-  print_matrix(A2d, M, N);
-
-  // tranpose
-  transpose_matrix(A2d, M, N, B2d);
-  print_matrix(B2d, N, M);
-  
-  // matmul
-  matmul(A2d, M, N, B2d, N, M, C2d);
-  print_matrix(C2d, M, M);
+  test_inverse(M, N);
 
   return 0;
 }
@@ -135,5 +122,36 @@ bool check_inverse(const std::vector<double> & A, int mA, int nA,
                     const std::vector<double> & B, int mB, int nB,
                     double eps)
 {
-    
+    // calculo la multiplicacion
+    std::vector<double> R;
+    matmul(A, mA, nA, B, mB, nB, R);
+    print_matrix(R, mA, nB);
+
+    // chequear elemento a elemento la condicion con la inversa
+    int mC = mA;
+    int nC = nB; 
+    for(int irow = 0; irow < mC; ++irow){
+        for(int icol = 0; icol < nC; ++icol){
+            double I = (irow == icol) ? 1.0 : 0.0; 
+            if (std::fabs(R[irow*nC + icol] - I) > eps) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+void test_inverse(int m, int n)
+{
+  m = 2; n = 2;
+  std::vector<double> A2d {2, 1, 4, 3}; // original matrix
+  std::vector<double> B2d {3.0/2 + 1.0e-10, -1.0/2, -2.0, 1.0}; // inverse
+
+  // setup original matrix
+  print_matrix(A2d, m, n);
+  print_matrix(B2d, n, m);
+
+  bool flag1 = check_inverse(A2d, m, n, B2d, n, m, 1.0e-6);
+  bool flag2 = check_inverse(B2d, n, m, A2d, m, n, 1.0e-6);
+  std::println("{} {}", flag1, flag2);
 }

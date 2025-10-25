@@ -6,7 +6,7 @@
 #include <cassert>
 
 // class declarations
-//class Matrix2D;
+class Matrix2D;
 
 // functions 
 void fill_matrix(std::vector<double> & data, int m, int n);
@@ -30,30 +30,33 @@ bool check_commute(const std::vector<double> & A, int mA, int nA,
                     double eps);
 void test_commute(int m, int n);
 
-// class impl
+// =====================================================
+// Matrix2D class definition
+// =====================================================
 class Matrix2D
 {
-  public:
+public:
   int m{0}, n{0};
   std::vector<double> data;
 
-  Matrix2D(int M, int N) {
-    m = M;
-    n = N;
-    data.resize(m*n);
+  Matrix2D(int M, int N) : m(M), n(N), data(M * N) {}
+
+  // non-const accessor
+  double &operator()(int i, int j) {
+    assert(i >= 0 && i < m && j >= 0 && j < n);
+    return data[i * n + j];
   }
 
-  double & operator()(int i, int j) {
-    return data[i*n + j];
+  // const accessor
+  double operator()(int i, int j) const {
+    assert(i >= 0 && i < m && j >= 0 && j < n);
+    return data[i * n + j];
   }
-  
 };
-
 
 
 // functions for matrix2D
 void print_matrix(const Matrix2D & data);
-
 
 
 int main(int argc, char **argv)
@@ -69,25 +72,6 @@ int main(int argc, char **argv)
 
   return 0;
 }
-
-// class impl
-class Matrix2D
-{
-  public:
-  int m{0}, n{0};
-  std::vector<double> data;
-
-  Matrix2D(int M, int N) {
-    m = M;
-    n = N;
-    data.resize(m*n);
-  }
-
-  double & operator()(int i, int j) {
-    return data[i*n + j];
-  }
-  
-};
 
 // function impl
 void fill_matrix(std::vector<double> & data, int m, int n)

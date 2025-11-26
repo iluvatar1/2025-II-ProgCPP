@@ -32,7 +32,7 @@ int main(void)
     std::map<std::string, double> params;
     params["DT"] = 0.01;   
     params["G"] = 9.81;
-    params["K"] = 4001.9876;
+    params["K"] = 201.9876;
     params["B"] = 0.2;
     params["LX"] = 3.78;
 
